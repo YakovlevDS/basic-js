@@ -12,9 +12,6 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function deleteDigit(n) {
-    // throw new NotImplementedError('Not implemented');
-
-
     let arrN = n.toString().split('').map(i => +i)
 
     let minNum

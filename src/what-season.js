@@ -12,38 +12,72 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 function getSeason(date) {
-    // throw new NotImplementedError('Not implemented');
-    if (!date instanceof Date && !isNaN(date)) { throw new Error('Invalid date!') }
-    if (date === undefined) { return 'Unable to determine the time of year!' }
-
-    const seasons = ["spring", "summer", "autumn", "winter"];
-    const m = date.getMonth()
-    const day = +date.getDate()
-    const year = date.getFullYear()
-
-    if (!m || !day || !year) { throw new Error('Invalid date!') }
-
-    if (year < 1970) { throw new Error('Invalid date!') }
-    if (date - new Date(0) < 0) { throw new Error('Invalid date!') }
-    if (day < 1 || day > 31) { throw new Error('Invalid date!') }
-    if (day === 31 && m !== 0 || m !== 2 || m !== 4 || m !== 6 || m !== 7 || m !== 9 || m !== 11) { throw new Error('Invalid date!') }
-    if (day === 30 && m !== 3 || m !== 5 || m !== 8 || m !== 10) { throw new Error('Invalid date!') }
-    if (day === 29 && m !== 1) { throw new Error('Invalid date!') }
-    if (day === 28 && m !== 1) { throw new Error('Invalid date!') }
+    if (date === undefined) return 'Unable to determine the time of year!'
+    console.log((date));
+    // console.log(Object.prototype.toString.call(date));
 
 
+    // const isDateValid = (...val) => !Number.isNaN(new Date(...val).valueOf());
 
-    if (m === 1 && day === 28 && (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) { throw new Error('Invalid date!') }
-    if (m === 1 && day === 29 && !(year % 4 === 0 && year % 100 !== 0) || !year % 400 === 0) { throw new Error('Invalid date!') }
+    // console.log(isDateValid("December 17, 1995 03:24:00"));
+    if ((typeof date) === 'number') return new Error('Invalid date!')
+    if ((typeof date) === 'string') {
+        date = new Date(Date.parse(date))
+    }
+    if (isNaN(date)) return new Error('Invalid date!')
+        // console.log(Object.prototype.toString.call(date) === "[object Date]");
+    const w = Object.prototype.toString.call(date)
+        // || w === "[object Number]"
+    if (!w === "[object Date]") {
+        // console.log('Value: ');
+        return new Error('Invalid date!')
+    } else {
+        // console.log('прошел ');
 
 
+        const seasons = ["spring", "summer", "autumn", "winter"];
+        let m = date.getMonth()
+        let day = +date.getDate()
+        const year = date.getFullYear()
+        console.log(day, m, year);
 
-    if (m < 0 || m > 11) { throw new Error('Invalid date!') }
-    if (m >= 0 && m < 2 || m === 11) return seasons[3]
-    if (m > 1 && m < 5) return seasons[0]
-    if (m > 4 && m < 8) return seasons[1]
-    if (m > 7 && m < 11) return seasons[2]
+        if (year < 0) return new Error('Invalid date!')
+            // if (year < 1970) return new Error('Invalid date!')
+            // if (date - new Date(0) < 0) return new Error('Invalid date!')
+
+        const m1 = [0, 2, 4, 6, 7, 9, 11]
+        const m2 = [3, 5, 8, 10, ...m1]
+
+        if (day < 0 || day > 31) return new Error('Invalid date!')
+
+
+        if (day === 31 && !m1.includes(m)) return new Error('Invalid date!')
+        if (day === 30 && !m2.includes(m)) return new Error('Invalid date!')
+        if (day > 29 && m === 1) return new Error('Invalid date!')
+
+
+        const a = year % 4 === 0
+        const b = year % 100 === 0
+        const c = year % 400 === 0
+        const ily = a && b && c
+            // a && b && c //условие высокосного года
+        if (m === 1 && day === 29) {
+            if (!ily) return new Error('Invalid date!')
+        }
+
+        if (m === 1 && day === 28) {
+            if (ily) return new Error('Invalid date!')
+        }
+
+        if (m < 0 || m > 11) return new Error('Invalid date!')
+        if (m >= 0 && m < 2 || m === 11) return seasons[3]
+        if (m > 1 && m < 5) return seasons[0]
+        if (m > 4 && m < 8) return seasons[1]
+        if (m > 7 && m < 11) return seasons[2]
+    }
 }
+
+
 
 
 

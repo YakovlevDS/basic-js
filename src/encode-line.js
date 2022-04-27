@@ -11,9 +11,6 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function encodeLine(str) {
-    // throw new NotImplementedError('Not implemented');
-
-
     let arrRes = str.match(/(.)\1*/g) || []
     let strRes = arrRes.reduce((sum, v) => sum + v.length + v[0], 0)
     if (strRes == 0) { return '' }

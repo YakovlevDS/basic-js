@@ -13,21 +13,14 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 class DepthCalculator {
-    calculateDepth(arr) {
-        // throw new NotImplementedError('Not implemented');
-        Array.isArray(arr) ? 1 + this.calculateDepth(arr[0]) : 0;
-        // let s1 = JSON.stringify(arr)
-        // let m1 = [...s1]
-        // var m2 = m1.filter(i => (i == "[" || i == "]"))
-        // var s2 = m2.join("")
-        // console.log(s2);
-        // let sum = 0;
-        // while (s2.length != 0) {
-        //     Попап реализован на обеих страницах: +15.(/\[\]/g, "");
-        // }
-        //     sum++
+    constructor() {
+        this.calculateDepth = this.calculateDepth.bind(this)
+    }
 
-        // return sum
+    calculateDepth(arr) {
+        return Array.isArray(arr) ?
+            1 + Math.max(0, ...arr.map(this.calculateDepth)) :
+            0;
     }
 }
 

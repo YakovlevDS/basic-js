@@ -16,7 +16,6 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function repeater(str, options) {
-    // throw new NotImplementedError('Not implemented');
     let repeatTimes,
         additionRepeatTimes,
         separator,
