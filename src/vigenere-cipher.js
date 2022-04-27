@@ -20,31 +20,50 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-    encrypt(str, key) {
-        let cipher_text = "";
-
-        for (let i = 0; i < str.length; i++) {
-            let x = (str[i].charCodeAt(0) + key[i].charCodeAt(0)) % 26;
-            x += 'A'.charCodeAt(0);
-            cipher_text += String.fromCharCode(x);
-        }
-        return cipher_text.toUpperCase();
+    constructor(key) {
+        this.key = key;
     }
 
-    decrypt(cipher_text, key) {
-        let orig_text = "";
+    // (this.bool===false)? directMachine:reverseMachine
+    // directMachine() {}
+    // reverseMachine() {}
 
-        for (let i = 0; i < cipher_text.length; i++) {
-            let x = (cipher_text[i].charCodeAt(0) -
-                key[i].charCodeAt(0) + 26) % 26;
-            x += 'A'.charCodeAt(0);
-            orig_text += String.fromCharCode(x);
+    encrypt(text) {
+        let cipher = '';
+        text = text.toUpperCase();
+        for (let i = 0, k = 0; i < text.length; i++) {
+            const tCode = text[i].charCodeAt(0);
+            // console.log(tCode);
+            if (tCode >= 65 && tCode <= 90) {
+                const charCode = ((tCode) + (this.key.charCodeAt(k % this.key.length))) % 26;
+                cipher += String.fromCharCode(charCode + 65);
+                k++
+            } else {
+                cipher += text[i];
+            }
         }
-        return orig_text.toUpperCase();
+        return cipher;
+    };
 
+    decrypt(cipher) {
+        let text = '';
+        for (let i = 0, k = 0; i < cipher.length; i++) {
+            const tCode = cipher[i].charCodeAt(0);
+            // console.log(tCode);
+            // console.log(cipher.charCodeAt(i));
+
+            if (tCode >= 65 && tCode <= 90) {
+                const charCode = ((((tCode) - (this.key.charCodeAt(k % this.key.length))) % 26 + 26) % 26);
+                text += String.fromCharCode(charCode + 65);
+                k++
+            } else {
+                text += cipher[i];
+            }
+
+        }
+        return text;
     }
 }
-
 module.exports = {
     VigenereCipheringMachine
 };
