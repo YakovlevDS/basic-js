@@ -13,6 +13,7 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 function getSeason(date) {
     if (date === undefined) return 'Unable to determine the time of year!'
+    try { date.getTime() } catch { throw new Error('Invalid date!') }
     if ((typeof date) === 'number') throw new Error('Invalid date!')
     if (isNaN(date)) throw new Error('Invalid date!')
     const w = Object.prototype.toString.call(date)

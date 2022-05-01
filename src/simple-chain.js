@@ -4,37 +4,41 @@ const { NotImplementedError } = require('../extensions/index.js');
  * Implement chainMaker object according to task description
  * 
  */
+
 const chainMaker = {
-    chain: '',
-    getLength() {
-        return this.chain.split('~~').length - 1
+    chainArr: [],
+
+    getLength() { return this.chainArr.length },
+
+    addLink(v = '') {
+        this.chainArr.push(v);
+        return this;
     },
-    addLink(value) {
-        if (typeof value == 'object' && value !== null) { value = '[object Object]' }
 
-        this.chain += `( ${value} )~~`
-        return this
-
-    },
-    removeLink(position) {
-
-        if (typeof position !== 'number') throw new Error('You can\'t remove incorrect link!')
-        if (position < 1) throw new Error('You can\'t remove incorrect link!')
-        if (position >= this.chain.split('~~').length - 1) throw new Error('You can\'t remove incorrect link!')
-
-        this.chain = this.chain.split('~~').slice(0, position - 1).concat(this.chain.split('~~').slice(position, this.chain.split('~~').length - 1)).join('~~') + '~~'
+    removeLink(ind) {
+        if (!(Number.isInteger(ind)) || (ind <= 0) || (ind > this.getLength())) {
+            this.chainArr = [];
+            throw Error('You can\'t remove incorrect link!');
+        }
+        this.chainArr.splice(ind - 1, 1);
         return this;
     },
     reverseChain() {
-        if (this.chain.split('~~').length - 1 < 2) { return this }
-        this.chain = this.chain.slice(0, this.chain.length - 2).
-        split('~~').reverse().join('~~') + '~~'
-            // console.log(this.chain);
+        this.chainArr = this.chainArr.reverse()
         return this;
     },
     finishChain() {
-        this.chain = this.chain.slice(0, this.chain.length - 2)
-        return this.chain
+        let l = this.getLength();
+        let chain = '';
+
+        while (l > 1) {
+            chain += `( ${this.chainArr[0]} )~~`;
+            this.chainArr.splice(0, 1);
+            l--
+        }
+        chain += `( ${this.chainArr[0]} )`;
+        this.chainArr = []
+        return chain
     }
 };
 
